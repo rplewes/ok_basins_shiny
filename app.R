@@ -7,6 +7,7 @@ library(lwgeom)
 library(sf)
 library(tidyverse)
 library(data.table)
+library(rsconnect)
 
 #Load data from Prepared RDS files
 streams=readRDS("data/streams.rds")

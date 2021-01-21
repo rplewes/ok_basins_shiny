@@ -1,0 +1,12 @@
+name: ok_basin_watersheds
+title: ok_basin_watersheds
+username:
+account: clearvizaquatic
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3498863
+bundleId: 4123696
+url: https://clearvizaquatic.shinyapps.io/ok_basin_watersheds/
+when: 1611187954.9497
+asMultiple: FALSE
+asStatic: FALSE
