@@ -20,25 +20,27 @@ lakes=readRDS("data/lakes.rds")
 ui <- fluidPage(
 
     # Application title
-    titlePanel("Freshwater Atlas Assessment Watersheds"),
+    titlePanel("Okanagan Basin Freshwater Atlas Assessment Watersheds"),
+ 
 
     # Map that is of the whole Ok Basin
    
-        sidebarPanel(
+        sidebarPanel("Please Select Watershed with Cursor",
             leafletOutput(outputId = "map1") ,
             actionButton( inputId = "clearSelection"
                           , icon = icon( name = "eraser")
                           , label = "Clear Selected Watershed")
-      
-        )
-        ,
-
-        # Map that reactively generates based on watershed selection
-        mainPanel(
-        leafletOutput(outputId = "map2")
-       
         
-        )
+      
+        ),
+    # Map that reactively generates based on watershed selection   
+    mainPanel(
+      leafletOutput(outputId = "map2")
+      
+      
+    )
+       
+      
 
 )
 
