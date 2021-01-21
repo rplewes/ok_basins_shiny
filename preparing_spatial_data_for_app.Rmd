@@ -1,0 +1,84 @@
+---
+title: "Prepare Spatial Data for Shiny App"
+author: "Rachel Plewes"
+date: "19/01/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r library, include=FALSE}
+library(leaflet)
+library(tidyverse)
+library(sf)
+```
+
+#Load Data
+```{r load streams}
+gdb1="C:/Users/Rachel/OneDrive - Clear Viz Aquatic Consulting/GIS/Base_Data/FWA_Features/FWA_STREAM_NETWORKS_SP.gdb"
+ok_st=st_read(gdb1, "OKAN") %>% st_zm( drop = T, what = "ZM")
+```
+
+```{r load watersheds}
+gdb2="C:/Users/Rachel/OneDrive - Clear Viz Aquatic Consulting/GIS/Base_Data/Watersheds/FWA_ASSESSMENT_WATERSHEDS_POLY"
+fwa=st_read(gdb2, "FWA_ASS_WS_polygon")
+```
+
+```{r load lakes}
+gdb3="C:/Users/Rachel/OneDrive - Clear Viz Aquatic Consulting/GIS/Base_Data/FWA_Features/FWA_LAKES_POLY.gdb"
+#st_layers(gdb3)
+lakes=st_read(gdb3, "WHSE_BASEMAPPING_FWA_LAKES_POLY") 
+```
+#Munge Stream, Lake and Watershed data to only select Okanagan Basin
+
+```{r transform and get rid of lake segments}
+ok_st <- st_transform(ok_st, 4326) %>% filter(FEATURE_SOURCE != "lake-def skelet")
+```
+
+```{r select only Okanagan Basin Waterseds}
+okb=fwa %>% filter(WTRSHD_GRC == "OKAN")
+```
+
+```{r select only Okanagan Lakes}
+ok_lk=lakes %>% filter(WATERSHED_GROUP_CODE == "OKAN")
+```
+
+
+```{r}
+rm("fwa")
+```
+
+```{r}
+head(okb)
+```
+
+
+```{r transform for leaflet}
+okb <- st_transform(okb, 4326)
+ok_lk <- st_transform(ok_lk, 4326)
+```
+
+```{r dissolve by stream name and order, warning=FALSE, message=FALSE}
+ok_st <- ok_st %>%  group_by(GNIS_NAME,STREAM_ORDER) %>% summarize()
+```
+
+
+#Output Data to RDS files
+```{r output data file for shiny app}
+rm("st_g3")
+rm("gdb1")
+rm("gdb2")
+outdir="C:/Users/Rachel/OneDrive - Clear Viz Aquatic Consulting/Example_Projects/Shiny_App/watershed_select/data/"
+saveRDS(ok_st, file = paste0(outdir,"streams.rds"))
+saveRDS(okb, file = paste0(outdir,"wat.rds"))
+saveRDS(ok_lk, file = paste0(outdir,"lakes.rds"))
+```
+
+
+
+
+
+
+
